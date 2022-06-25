@@ -1,6 +1,8 @@
-console.log('It\'s a GUNDAM!!!');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.listen(3000, function() {
 	console.log('listening on 3000')
@@ -8,5 +10,9 @@ app.listen(3000, function() {
 
 app.get('/', function(req, res) {
 	res.sendFile('/Users/idris/Desktop/project-crud' + '/index.html')
+})
+
+app.post('/quotes', (req, res) => {
+	console.log('Amuro Ray, launching!!')
 })
 
