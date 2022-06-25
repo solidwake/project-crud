@@ -1,6 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const MongoClient = require('mongodb').MongoClient;
+const connectionString = 'mongodb+srv://gundam:RpUmgwH2e10kHbFn@cluster0.dabepjp.mongodb.net/?retryWrites=true&w=majority'
 const app = express();
+
+MongoClient.connect(connectionString, (err, client) => {
+	if (err) return console.error(err)
+	console.log('Connected to database')	
+})
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -13,6 +20,6 @@ app.get('/', function(req, res) {
 })
 
 app.post('/quotes', (req, res) => {
-	console.log('Amuro Ray, launching!!')
+	console.log(req.body)
 })
 
