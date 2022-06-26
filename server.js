@@ -11,8 +11,9 @@ MongoClient.connect(connectionString, (err, client) => {
 	const quotesCollection = db.collection('quotes')
 
 	app.set('view engine', 'ejs');
-
 	app.use(bodyParser.urlencoded({ extended: true }))
+	app.use(bodyParser.json())
+	app.use(express.static('public'))
 	
 	app.listen(3000, function() {
         	console.log('listening on 3000')
@@ -34,5 +35,23 @@ MongoClient.connect(connectionString, (err, client) => {
 				res.redirect('/')
 			})
 			.catch(error => console.error(error))
+	})
+
+	app.put('/quotes', (req, res) => {
+		quotesCollection.findOneAndUpdate(
+			{ name: 'Amuro Ray' },
+			{
+				$set: {
+					name: req.body.name,
+					quote: req.body.quote
+				}
+			},
+			{
+				upsert: true
+			}
+		)
+		.then(result => {res.json('Success!')
+		.catch(error => console.log(error))
+		})
 	})
 })
