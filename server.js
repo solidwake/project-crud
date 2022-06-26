@@ -6,20 +6,31 @@ const app = express();
 
 MongoClient.connect(connectionString, (err, client) => {
 	if (err) return console.error(err)
-	console.log('Connected to database')	
+	console.log('Connected to database')
+	const db = client.db('gundam-quotes')
+	const quotesCollection = db.collection('quotes')
+
+	app.use(bodyParser.urlencoded({ extended: true }))
+	
+	app.listen(3000, function() {
+        	console.log('listening on 3000')
+	})
+
+	app.get('/', (req, res) => {
+        	res.sendFile('/Users/idris/Desktop/project-crud' + '/index.html')
+		db.collection('quotes').find().toArray()
+		.then(results => {
+		console.log(results)
+		})
+		.catch(error => console.error(error))
+	})
+
+	app.post('/quotes', (req, res) => {
+        	quotesCollection.insertOne(req.body)
+			.then(result => {
+				console.log(result)
+				res.redirect('/')
+			})
+	.catch(error => console.error(error))
+	})
 })
-
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.listen(3000, function() {
-	console.log('listening on 3000')
-})
-
-app.get('/', function(req, res) {
-	res.sendFile('/Users/idris/Desktop/project-crud' + '/index.html')
-})
-
-app.post('/quotes', (req, res) => {
-	console.log(req.body)
-})
-
