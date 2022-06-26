@@ -10,6 +10,8 @@ MongoClient.connect(connectionString, (err, client) => {
 	const db = client.db('gundam-quotes')
 	const quotesCollection = db.collection('quotes')
 
+	app.set('view engine', 'ejs');
+
 	app.use(bodyParser.urlencoded({ extended: true }))
 	
 	app.listen(3000, function() {
@@ -17,12 +19,12 @@ MongoClient.connect(connectionString, (err, client) => {
 	})
 
 	app.get('/', (req, res) => {
-        	res.sendFile('/Users/idris/Desktop/project-crud' + '/index.html')
 		db.collection('quotes').find().toArray()
-		.then(results => {
-		console.log(results)
-		})
-		.catch(error => console.error(error))
+			.then(results => {
+				res.render('index.ejs', { quotes: results })
+				console.log(results)
+			})
+			.catch(error => console.error(error))
 	})
 
 	app.post('/quotes', (req, res) => {
@@ -31,6 +33,6 @@ MongoClient.connect(connectionString, (err, client) => {
 				console.log(result)
 				res.redirect('/')
 			})
-	.catch(error => console.error(error))
+			.catch(error => console.error(error))
 	})
 })
